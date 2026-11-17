@@ -1,0 +1,313 @@
+Checklist persiapan Aplikasi sederhana
+
+Brief Proyek: Aplikasi Laporan Penjualan dan Order Bahan Roti Bakar Djago (Versi Awal)
+Untuk: Gemini Pro · Pemilik proyek: Gilang · Disusun: 16 November 2026 · Status: draf. Bagian bertanda ☐ masih harus dilengkapi pemilik.
+1. Cara membaca dokumen dan cara kerja yang diminta
+Dokumen ini memuat seluruh konteks proyek agar tidak perlu banyak penjelasan tambahan. Dokumen ini belum meminta aplikasi dibuat sekaligus. Mulailah mengerjakan sebuah tahap hanya setelah pemilik memintanya.
+Cara kerja yang diminta:
+	•	Pemilik belum mahir coding. Jelaskan dengan bahasa Indonesia yang sederhana.
+	•	Kerjakan satu tahap dalam satu waktu, berikan kode lengkap yang siap disalin, lalu tunggu konfirmasi sebelum lanjut.
+	•	Bila ada informasi yang kurang, atau bertanda ☐ atau “PERLU DIKONFIRMASI”, tanyakan dulu. Jangan menebak.
+	•	Patuhi bagian “Yang tidak boleh diubah” dan “Target versi awal dan di luar lingkup”.
+	•	Kuota Gemini terbatas: jawab ringkas dan jangan mengulang isi dokumen ini.
+2. Ringkasan dan tujuan
+Aplikasi web yang dibuka lewat browser HP agar mitra Roti Bakar Djago di tiap cabang bisa mengisi laporan penjualan harian dan order bahan dengan cepat, minim salah input, dan tetap nyaman di HP Android berspesifikasi rendah. Setiap input otomatis ditulis ke Google Sheets yang sudah dipakai sekarang. Data lama dilanjutkan, tidak dibuat spreadsheet baru.
+Prioritas: sederhana, ringan, gratis, mudah dirawat oleh satu orang, dan bisa dikembangkan nanti.
+3. Latar belakang masalah
+	•	Mitra mengisi laporan langsung di Google Sheets. Sheets lambat dimuat, terutama di HP jadul, sehingga input makin lama dan rawan salah.
+	•	Cara kerja nyata: mitra mencatat penjualan di kertas saat berjualan, lalu merekapnya sekaligus di rumah (bisa puluhan pcs).
+	•	Pengelola hanya satu orang dan kemampuan codingnya terbatas, jadi solusi harus sederhana dan mudah dirawat.
+4. Kondisi sekarang (masih memakai Google Sheets)
+	•	Tiap cabang punya file Google Sheets sendiri dengan struktur yang sama.
+	•	Sheet Penjualan_Harian: mitra memilih menu dari dropdown di kolom C. ARRAYFORMULA di baris atas mengisi kolom lain (harga, HPP, bagi hasil, dan seterusnya).
+	•	Sheet Order_Bahan: mitra memilih nama bahan dari dropdown (validasi data dengan sumber sheet Data_Produk). Kolom No dan Unit terisi rumus.
+	•	Sheet Dashboard menghitung dari data penjualan (misalnya membandingkan kolom Tanggal dengan TODAY()-1 dan menjumlahkan Bagi Hasil Penjual). Dashboard dan rumusnya tidak diubah.
+5. Target versi awal dan di luar lingkup
+Dibuat di versi awal:
+	•	Satu link unik per cabang dan satu PIN 6 angka per cabang.
+	•	Menu utama dengan dua tombol: Laporan Penjualan Harian dan Order Bahan.
+	•	Form Laporan Penjualan Harian (dengan keranjang) dan form Order Bahan.
+	•	Ekspor otomatis ke sheet yang sudah ada di Google Sheets cabang.
+	•	Daftar menu dan bahan dibaca dari Google Sheets.
+	•	Pencegahan kiriman ganda, catatan Log, dan draf yang tersimpan di HP.
+	•	Layar hasil: Terkirim dan Gagal.
+Di luar lingkup versi awal (jangan dibuat sekarang):
+	•	Halaman Admin dan verifikasi email, dashboard mitra, penguncian akun, dan Ganti PIN.
+	•	Koreksi laporan lewat aplikasi (koreksi dilakukan langsung di Sheets dengan menghapus baris).
+	•	Penyesuaian harga menu campuran. Menu campuran dibuat sebagai satu menu tersendiri di daftar menu.
+	•	Pembekuan nilai (rumus Sheets tetap dipakai), mode offline penuh, domain sendiri, dan Tambah cabang otomatis.
+6. Alur pengguna
+Masuk:
+	•	Mitra membuka link unik cabangnya.
+	•	Mitra memasukkan PIN 6 angka.
+	•	Server memeriksa PIN. Benar: masuk menu utama. Salah: tampil pesan dan server menunda 1 detik. Belum ada penguncian akun.
+	•	Menu utama menampilkan dua tombol besar.
+Laporan Penjualan Harian:
+	•	Pilih tanggal laporan (default hari ini, zona waktu WIB, bisa diganti).
+	•	Pilih menu dari daftar lewat panel dari bawah dengan kotak pencarian. Menu tidak bisa diketik bebas.
+	•	Pilih metode bayar (wajib sebelum menambahkan).
+	•	lalu tekan Tambahkan.
+	•	Keranjang menggabungkan baris yang menu dan metode bayarnya sama. Mitra bisa mengubah jumlah atau menghapus baris.
+	•	Total pcs ditampilkan sebelum kirim.
+	•	Tekan Kirim. Tombol langsung nonaktif dan tampil indikator. Berhasil: layar Terkirim. Gagal: pesan “Gagal terkirim” dan draf tetap tersimpan.
+Order Bahan:
+	•	Tanggal terisi otomatis sesuai tanggal input (WIB).
+	•	Pilih nama bahan dari daftar (sumber sheet Data_Produk).
+	•	Isi Qty. Keterangan opsional.
+	•	Tambahkan ke daftar sementara (beberapa bahan dalam satu kiriman), lalu Kirim.
+	•	Unit tidak diisi mitra karena terisi rumus. Unit boleh ditampilkan sebagai info saja.
+Diagram alur berbentuk gambar akan dilampirkan pemilik (lihat bagian 19).
+7. Halaman dan tampilan
+Layar versi awal: (1) Login PIN, (2) Menu utama dua tombol, (3) Form Laporan Penjualan beserta panel Pilih menu, (4) Form Order Bahan, (5) Layar hasil (Terkirim dan Gagal), (6) Layar kondisi sederhana (tanpa sinyal, gagal memuat).
+Lampiran desain: desain final login, menu utama, laporan penjualan dan order bahan dibuat pemilik di CorelDRAW dan dilampirkan terpisah. 
+Gaya visual (mengikuti logo Roti Bakar Djago):
+	•	Warna: silahkan lihat warna yang saya gunakan di desain final yang saya buat, jika ada warna lain yang silahkan sesuaikan. Contoh : jika gagal terkirim silahkan warnanya pilih sendiri yang paling optimal 
+	•	Font bawaan HP, dua ketebalan. Teks isi 16 px, label 14 px (minimal 12 px), judul 20 px tebal.
+	•	Tombol utama tinggi 52 sampai 56 px, tombol lain minimal 44 px, jarak antar tombol minimal 8 px, sudut 8 px. Acuan lebar layar 360 px, mobile-first, tanpa animasi dan tanpa pustaka berat.
+	•	Antarmuka berbahasa Indonesia sederhana.
+8. Struktur Google Sheets dan kolom yang diisi aplikasi
+Prinsip: data baru ditambahkan di bawah data lama pada spreadsheet yang sudah ada. Jangan membuat file atau sheet baru. Nama sheet harus persis: Penjualan_Harian dan Order_Bahan.
+Sheet Penjualan_Harian. A1:L1 berisi judul cabang (contoh “4 Internal Gading”), baris 2 adalah header, data mulai baris 3. Kolom:
+	•	A Pcs: terisi rumus. Satu baris untuk satu pcs.
+	•	B Tanggal: diisi aplikasi. Harus berupa tanggal sungguhan tanpa jam (bukan teks), zona waktu WIB.
+	•	C Menu: diisi aplikasi, persis seperti nama pada daftar menu.
+	•	D Harga, E HPP, F Margin Kotor, G Bagi Hasil Penjual, H Bagi Hasil Partner, I Cicil Hutang, J Budget Kupon, K Laba Kotor: semuanya terisi rumus. JANGAN PERNAH menulis ke kolom D sampai K karena merusak ARRAYFORMULA.
+	•	L Metode Bayar: diisi aplikasi. Nilai persis yang dikenali Sheets: Tunai, QRIS, Shopee, Gofood. Label di layar boleh berbeda (misalnya “GoFood” atau “Shopee Food”), tetapi tulisan yang dikirim ke Sheets harus persis seperti nilai tadi.
+Catatan khusus : ada sebagian cabang yang isinya seperti ini sepertinya di kasih pilihan atau gimana ya?
+	•	D Harga, E Bagi Hasil semuanya terisi rumus. JANGAN PERNAH menulis ke kolom D sampai E karena merusak ARRAYFORMULA. 
+	•	F Metode Bayar: diisi aplikasi. Nilai persis yang dikenali Sheets: Tunai, QRIS, Shopee, Gofood. Label di layar boleh berbeda (misalnya “GoFood” atau “Shopee Food”), tetapi tulisan yang dikirim ke Sheets harus persis seperti nilai tadi.
+Sheet Order_Bahan. B1:D1 berisi “INPUT DATA BARU >>”, baris 2 adalah header, data mulai baris 3. Kolom:
+	•	A No: terisi rumus.
+	•	B Tanggal: diisi aplikasi (tanggal input, WIB, tanggal sungguhan).
+	•	C Order: diisi aplikasi (nama bahan persis seperti daftar).
+	•	D Unit: terisi rumus.
+	•	E Qty: diisi aplikasi.
+	•	F Keterangan: opsional, diisi aplikasi bila ada.
+Aturan penulisan:
+	•	Cari baris kosong pertama dengan membaca kolom input (kolom C), bukan fitur append otomatis, karena rumus bisa menghasilkan teks kosong yang membingungkan.
+	•	Tulis seluruh baris satu kiriman sekaligus dalam satu operasi (kolom B dan C bersama, kolom L terpisah), bukan baris demi baris.
+	•	Gunakan kunci agar dua kiriman bersamaan tidak menimpa baris yang sama.
+	•	Validasi data di Sheets tidak melindungi tulisan dari script. Karena itu pilihan di aplikasi harus bersumber dari daftar yang sama.
+Contoh (nama hanya contoh): keranjang tanggal 11 November 2026 berisi 2 Coklat Single (Tunai) dan 1 Choco Crunchy Single (QRIS) menghasilkan tiga baris baru di Penjualan_Harian: (B=11/11/2026, C=Coklat Single, L=Tunai), (B=11/11/2026, C=Coklat Single, L=Tunai), dan (B=11/11/2026, C=Choco Crunchy Single, L=QRIS). Kolom A dan D sampai K terisi rumus. Untuk order bahan: Roti Casino, Qty 5, pada 16 November 2026 menghasilkan satu baris di Order_Bahan dengan B=16/11/2026, C=Roti Casino, E=5. Kolom A dan D terisi rumus.
+Tangkapan layar Sheets dan teks rumus akan dilampirkan pemilik (lihat bagian 19).
+9. Daftar menu dan bahan baku
+	•	Sumber tunggal: sheet Data_Produk di file Google Sheets cabang, yang juga dipakai dropdown dan rumus. Aplikasi hanya membaca dari sana. Jangan membuat daftar kedua yang diketik terpisah.
+	•	Daftar disimpan sementara (cache) beberapa menit di server dan di HP agar halaman cepat dibuka.
+	•	Pemilik mengelola daftar langsung di Sheets. Halaman Admin untuk itu ditunda.
+	•	Nama menu dan bahan harus persis sama dengan di Sheets (huruf besar kecil dan spasi). Contoh bentuk nama menu: “Coklat Single”, “Choco Crunchy Single”. Daftar resmi akan dilampirkan pemilik.
+	•	Rencana: sebuah Google Sheet khusus yang menarik daftar menu dan bahan (IMPORTRANGE) untuk dibaca aplikasi, dibuat nanti saat cabang bertambah.
+10. PIN, link unik, dan hak akses
+	•	Tiap cabang punya satu link unik dan satu PIN 6 angka.
+	•	Link memuat token acak dari huruf dan angka saja (minimal 24 karakter, tanpa karakter khusus), terpisah dari nama cabang. Contoh bentuk: ...?k=gading-k7p2x9mq4w8zv3rt5hn6bc1d. Tanpa domain sendiri; versi awal memakai alamat Apps Script.
+	•	PIN dan token hanya diperiksa di server dan tidak boleh ada di kode yang dikirim ke browser. Server menjawab sama untuk token salah maupun PIN salah.
+	•	Tab Config (akses hanya pemilik): kode cabang, token, ID spreadsheet, PIN, status aktif.
+	•	Hak akses saat ini: mitra hanya bisa memakai cabang miliknya. Tidak ada halaman Admin di versi awal.
+	•	Rencana fase 2: Admin (Gilang dan Chaeri) lewat halaman terpisah dengan verifikasi email, PIN disimpan teracak dan Admin hanya bisa mereset, sesi berakhir setelah 2 jam tidak dipakai, koreksi laporan hanya oleh Admin dan dicatat, serta pengaturan harga yang bisa diterapkan ke semua cabang atau cabang tertentu.
+11. Keamanan dasar
+	•	PIN dan token hanya di server. Halaman diberi tanda agar tidak muncul di pencarian (noindex).
+	•	Salah PIN: server menunda 1 detik.
+	•	Token bisa diganti bila bocor, PIN bisa diubah di Config.
+	•	Pencegahan kiriman ganda dengan penanda kiriman unik.
+	•	Hanya pemilik yang boleh membuka tab Config dan Log.
+	•	Mitra tidak perlu lagi punya akses edit ke Google Sheets setelah aplikasi berjalan.
+	•	Fase 2: penguncian akun bertahap setelah salah PIN.
+12. Infrastruktur dan hosting versi awal
+	•	Satu proyek Google Apps Script mandiri (bukan satu salinan script per cabang), dipublikasikan sebagai aplikasi web: dijalankan sebagai pemilik, akses “siapa saja” agar mitra tanpa akun Google bisa membuka.
+	•	Halaman dan logika dalam satu proyek, HTML dan JavaScript biasa tanpa framework berat. Kode dibagi menjadi bagian tampilan, logika, dan akses data agar mudah dipindah nanti.
+	•	Zona waktu Asia/Jakarta di proyek Apps Script dan di pengaturan setiap file spreadsheet.
+	•	Tab Config (cabang, token, ID spreadsheet, PIN, status) dan tab Log (waktu, cabang, jumlah baris, berhasil atau gagal).
+	•	Cache daftar menu dan bahan, serta draf keranjang di HP.
+	•	Batas gratis Apps Script untuk akun Gmail biasa menurut dokumentasi Google (bisa berubah): sekitar 6 menit per eksekusi, 30 eksekusi bersamaan, 90 menit total pemicu terjadwal per hari, dan 100 penerima email per hari.
+	•	Backup otomatis: salinan harian semua spreadsheet ke folder Drive khusus, disimpan 14 hari, dengan email pemberitahuan jika gagal.
+	•	Seluruh pengembangan dan uji dilakukan di salinan Sheets, bukan file asli, dimulai dari satu cabang.
+	•	Akun Google khusus bisnis dengan verifikasi dua langkah sebagai pemilik semua file dan script. Salinan kode disimpan terpisah.
+13. Yang tidak boleh diubah
+	•	Rumus yang sudah ada (kolom A dan D sampai K di Penjualan_Harian, kolom A dan D di Order_Bahan) dan sheet Dashboard.
+	•	Urutan kolom, nama sheet, dan judul di baris 1.
+	•	Sumber dropdown di sheet Data_Produk.
+14. Kriteria berhasil dan skenario uji
+	•	Kirim 3 pcs: muncul 3 baris baru di bawah data lama, tanggal benar, kolom D sampai K terisi rumus.
+	•	Dashboard menghitung data baru dengan benar.
+	•	Tanggal tercatat sebagai tanggal sungguhan (WIB), termasuk saat dikirim malam hari dan sekitar tengah malam.
+	•	Menekan Kirim dua kali, atau sinyal putus lalu mengulang: tidak ada baris ganda.
+	•	Nilai Metode Bayar dan nama menu persis seperti di Sheets.
+	•	Halaman ringan dan cepat di HP Android spesifikasi rendah dengan sinyal lemah.
+	•	PIN salah menampilkan pesan dan tidak membuka menu. PIN dan token tidak terlihat di kode browser.
+	•	Order bahan menghasilkan baris dengan Unit terisi otomatis oleh rumus.
+15. Pengembangan berikutnya
+	•	Fase 2: tampilan dipindah ke Cloudflare Pages (alamat gratis pages.dev) dengan Apps Script sebagai API; halaman Admin dengan verifikasi email; dashboard mitra ringkas; penguncian akun dan Ganti PIN; Tambah cabang otomatis dan Daftar cabang; catatan perubahan.
+	•	Fase 3: pembekuan nilai (aplikasi menulis angka tetap sehingga perubahan harga tidak mengubah baris lama), tabel pengaturan harga di halaman Admin dengan riwayat versi, penyesuaian harga menu campuran, koreksi laporan oleh Admin, database untuk daftar menu, pengarsipan tahunan, mode offline, dan notifikasi.
+	•	Susun kode agar peralihan ke fase 2 dan 3 tidak perlu menulis ulang tampilan.
+16. Keputusan final dan sementara
+Final: link unik dan PIN 6 angka per cabang; dua menu utama; kolom yang diisi aplikasi dan rumus (bagian 8); nilai Metode Bayar; satu baris per pcs; daftar menu dan bahan dibaca dari sheet Data_Produk; Apps Script gratis tanpa domain; zona waktu WIB; tanpa penguncian PIN di versi awal.
+Sementara (boleh diusulkan alternatifnya): cara PIN disimpan di Config, lama cache daftar, bentuk daftar sementara pada Order Bahan, dan isi layar kondisi.
+17. Istilah
+	•	Mitra: pengelola gerobak atau cabang yang mengisi laporan.
+	•	Cabang: satu lokasi usaha dengan satu file Google Sheets.
+	•	Single dan Regular: ukuran roti (Single setengah kotak, Regular satu kotak).
+	•	Crunchy dan Classic: dua jenis menu.
+	•	HPP: harga pokok penjualan. Margin Kotor: Harga dikurangi HPP. Laba Kotor: sisa setelah bagi hasil dan komponen tetap lain.
+	•	Kiriman: satu kali menekan Kirim, yang bisa berisi banyak baris.
+18. Pertanyaan terbuka (sesi khusus)
+☐ Rentang sel nama menu dan nama bahan di sheet Data_Produk, dan apakah daftar menu juga ada di sana.
+☐ Apakah dropdown menu di kolom C memakai sumber yang sama dengan yang akan dibaca aplikasi.
+☐ Ejaan resmi seluruh menu dan bahan.
+☐ Apakah Google Sheet khusus pembaca menu dan bahan dibuat sekarang atau nanti (usulan: nanti).
+☐ Kode, token, dan PIN tiap cabang, serta cabang pertama yang diuji.
+☐ PIN di tab Config disimpan apa adanya atau teracak sejak awal.
+☐ Lama cache daftar menu dan bahan yang bisa diterima (usulan: beberapa menit).
+☐ Peringatan “tanggal ini sudah pernah dikirim”: dibuat di versi awal atau fase 2.
+☐ Perlukah daftar sementara (beberapa bahan sekaligus) di Order Bahan, atau satu bahan per kiriman.
+☐ Jadwal backup dan pengarsipan.
+☐ Cara mitra menyimpan link (tambah ke layar utama HP) dan panduan singkat untuk mitra.
+☐ Format tanggal dan pengaturan bahasa tiap spreadsheet (pastikan sama).
+19. Yang harus saya lengkapi dan lampirkan (sesi khusus)
+☐ Tangkapan layar Google Sheets: header dan beberapa baris data dari Penjualan_Harian, Order_Bahan, dan Data_Produk.
+Penjualan_Harian
+
+Order_Bahan
+
+Data_Produk
+
+
+
+☐ Teks rumus (bukan gambar) kolom A dan D sampai K di Penjualan_Harian, serta kolom A dan D di Order_Bahan.
+Kolom A =ARRAYFORMULA(IF(B3:B=""; ""; 1))
+Karena baris 3 - 1503 sudah dirubah menjadi angka biasa maka rumusnya di mulai dari baris 1504
+Kolom D = =ARRAYFORMULA(IF(C1504:C=""; ""; IFERROR(VLOOKUP(C1504:C; Data_Produk!C:E; 2; 0); 0))) Kolom E =ARRAYFORMULA(IF(C1504:C=""; ""; IFERROR(VLOOKUP(C1504:C; Data_Produk!C:E; 3; 0); 0))) Kolom F =ARRAYFORMULA(IF(C1504:C=""; ""; IFERROR(VLOOKUP(C1504:C; Data_Produk!C:K; 4; 0); 0))) Kolom G =ARRAYFORMULA(IF(C1504:C=""; ""; IFERROR(VLOOKUP(C1504:C; Data_Produk!C:K; 5; 0); 0))) Kolom H =ARRAYFORMULA(IF(C1504:C=""; ""; IFERROR(VLOOKUP(C1504:C; Data_Produk!C:K; 6; 0); 0))) Kolom I =ARRAYFORMULA(IF(C1504:C=""; ""; IFERROR(VLOOKUP(C1504:C; Data_Produk!C:K; 7; 0); 0)))0 Kolom J =ARRAYFORMULA(IF(C1504:C=""; ""; IFERROR(VLOOKUP(C1504:C; Data_Produk!C:K; 8; 0); 0))) Kolom K =ARRAYFORMULA(IF(C1504:C=""; ""; IFERROR(VLOOKUP(C1504:C; Data_Produk!C:K; 9; 0); 0)))
+☐ Diagram alur mitra dan alur Lapor Penjualan (gambar).
+
+☐ Desain final dari CorelDRAW: login, menu utama, dan laporan penjualan.
+Login 
+
+Menu Pilihan
+
+Laporan penjualan
+
+Laporan penjualan pilih menu
+
+Order Bahan
+
+Order bahan pilih menu
+(menyesuaikan dari Laporan penjualan pilih menu)
+☐ Daftar menu lengkap dan daftar bahan lengkap dengan ejaan persis.
+Daftar Menu 
+Buah
+Kacang Sangrai
+Kacang Selai
+Coklat
+keju
+Kacang Sangrai + Buah
+Coklat + Buah
+Keju + Buah
+Kacang Sangrai + Coklat
+Kacang Sangrai + Keju
+Coklat + Keju
+Coklat Keju + Buah
+Kacang Sangrai Coklat + Buah
+Coklat Keju + Coklat
+Kacang Sangrai Coklat + Coklat
+Coklat Keju + Kacang Sangrai
+Kacang Sangrai Coklat + Kacang Sangrai
+Coklat Keju + Keju
+Kacang Sangrai Coklat + Keju
+Coklat Keju
+Coklat Keju + Kacang Sangrai Coklat
+Kacang Sangrai Coklat
+Choco Crunchy
+Tiramisu Crunchy
+Cheese Crunchy
+Milk Crunchy
+Greentea Crunchy
+Hazelnut Crunchy
+Choco Crunchy Keju
+Tiramisu Crunchy Keju
+Cheese Crunchy Keju
+Milk Crunchy Keju
+Greentea Crunchy Keju
+Hazelnut Crunchy Keju
+Choco Crunchy + Tiramisu Crunchy
+Choco Crunchy + Cheese Crunchy
+Choco Crunchy + Milk Crunchy
+Choco Crunchy + Greentea Crunchy
+Choco Crunchy + Hazelnut Crunchy
+Tiramisu Crunchy + Cheese Crunchy
+Tiramisu Crunchy + Milk Crunchy
+Tiramisu Crunchy + Greentea Crunchy
+Tiramisu Crunchy + Hazelnut Crunchy
+Cheese Crunchy + Milk Crunchy
+Cheese Crunchy + Greentea Crunchy
+Cheese Crunchy + Hazelnut Crunchy
+Milk Crunchy + Greentea Crunchy
+Milk Crunchy + Hazelnut Crunchy
+Greentea Crunchy + Hazelnut Crunchy
+Choco Crunchy Keju + Tiramisu Crunchy Keju
+Choco Crunchy Keju + Cheese Crunchy Keju
+Choco Crunchy Keju + Milk Crunchy Keju
+Choco Crunchy Keju + Greentea Crunchy Keju
+Choco Crunchy Keju + Hazelnut Crunchy Keju
+Tiramisu Crunchy Keju + Cheese Crunchy Keju
+Tiramisu Crunchy Keju + Milk Crunchy Keju
+Tiramisu Crunchy Keju + Greentea Crunchy Keju
+Tiramisu Crunchy Keju + Hazelnut Crunchy Keju
+Cheese Crunchy Keju + Milk Crunchy Keju
+Cheese Crunchy Keju + Greentea Crunchy Keju
+Cheese Crunchy Keju + Hazellnut Crunchy Keju
+Milk Crunchy Keju + Greentea Crunchy Keju
+Milk Crunchy Keju + Hazelnut Crunchy Keju
+Greentea Crunchy Keju + Hazelnut Crunchy Keju
+Cheese Milk Crunchy Kombinasi
+Cheese Choco Crunchy Kombinasi
+Cheese Milk Crunchy Keju Kombinasi
+Cheese Choco Crunchy Keju Kombinasi
+Kacang Selai + Buah
+Kacang Selai + Coklat
+Kacang Selai + Keju
+Kacang Selai Coklat + Keju
+Kacang Selai Coklat + Buah
+Kacang Selai Coklat + Coklat
+Coklat Keju + Kacang Selai
+Kacang Selai Coklat + Kacang Selai
+Coklat Keju + Kacang Selai Coklat
+Kacang Selai Coklat
+
+Daftar Bahan
+Roti
+Margarin Panggang
+Margarin Oles 
+Kental Manis
+Keju
+Pasta Coklat 
+Meses
+Kacang sangrai
+Goldenfil Cheese Crunchy
+Goldenfil Choco Crunchy
+Goldenfil Greentea Crunchy
+Goldenfil Hazelnut Crunchy
+Goldenfil Milk Crunchy
+Goldenfil Tiramisu Crunchy
+Selai Blueberry
+Selai Strawberry
+Gas
+Keresek HD 24
+Dus Kemasan
+Bon
+Sarung Tangan Plastik
+Kupon
+Sabun Cuci Piring
+Tisu
+Tanda Terimakasih
+Kacang Selai
+Meses 2
+☐ Contoh data nyata satu kiriman (input dan hasil di Sheets).
+Ada di screenshot 19 Penjualan_Harian
+☐ Nama cabang uji pertama dan salinan file Sheets-nya beserta ID.
+Link : https://docs.google.com/spreadsheets/d/1KJje2equjXBHBlpFniYrIZe2h05ydQZpebeRzOxMHgE/edit?gid=0#gid=0
+☐ Akun Google bisnis dengan verifikasi dua langkah.
+Saya menggunakan akun google gratis
+☐ Informasi perangkat: tipe HP terlemah, versi Android, browser, dan kualitas sinyal.
+Tidak ada datanya
+☐ Perkiraan volume: pcs per hari per cabang, jumlah baris sekarang, dan jumlah cabang.
+100 pcs
+☐ Satu atau dua mitra penguji.
+Satu saja
